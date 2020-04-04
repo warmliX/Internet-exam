@@ -52,7 +52,7 @@ public class TokenResolve {
         map.put("alg", "HS256");
         map.put("typ", "JWT");
 
-        Algorithm algorithm = Algorithm.HMAC256("secret");
+        Algorithm algorithm = Algorithm.HMAC256(secret);
 
         return JWT.create().withHeader(map)
             /* 设置 载荷 Payload */

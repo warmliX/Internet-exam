@@ -12,6 +12,7 @@ public class HandFaultResourceImpl implements HandFaultResource {
     @Override
     public String handFault(String token) {
         System.out.println(token);
+
         return null;
     }
 }

@@ -1,12 +1,12 @@
 package com.zzkk.internet.biz.service.impl;
 
 import com.zzkk.internet.biz.service.SignService;
+import com.zzkk.internet.build.tables.records.UserRecord;
 import com.zzkk.internet.common.JedisUtil;
 import com.zzkk.internet.common.TokenResolve;
 import com.zzkk.internet.dao.UserDao;
 import com.zzkk.internet.pojo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.ws.rs.core.Response;
@@ -36,27 +36,32 @@ public class SignServiceImpl implements SignService {
     @Override
     public Result<Boolean> signUp(String userName, String password, String email) {
         System.out.println("sign up");
-        if (userDao.selectByEmail(email).size() == 0)
+        if (userDao.selectByEmail(email) != null)
             return new Result<>(false, Response.Status.BAD_REQUEST.getStatusCode(), "This email has already registered an account");
 
-        if (userDao.selectByUname(userName).size() == 0)
+        if (userDao.selectByUname(userName) != null)
             return new Result<>(false, Response.Status.BAD_REQUEST.getStatusCode(), "Account already exists");
 
         String uid = UUID.randomUUID().toString().replaceAll("-", "");
         userDao.insert(uid, userName, password, email);
+        jedisUtil.zSet(userName, 0);
         return new Result<>(true);
     }
 
     @Override
     public Result<String> signIn(String userName, String password) {
+        UserRecord record = userDao.selectByUname(userName);
+        if (record == null)
+            return new Result<>("", Response.Status.BAD_REQUEST.getStatusCode(), "userName or password incorrect");
         String pWord = userDao.selectByUname(userName).getPword();
         System.out.println(pWord);
         if (!pWord.equals(password))
             return new Result<>("", Response.Status.BAD_REQUEST.getStatusCode(), "userName or password incorrect");
 
         String token = resolve.generateToken(userName);
-        jedisUtil.set(token, token, 1, 30 *60);
-        return new Result<>();
+        System.out.println(token);
+        jedisUtil.set(token, userName, 1, 30 *60);
+        return new Result<>(token, Response.Status.OK.getStatusCode(), "");
     }
 
     @Override

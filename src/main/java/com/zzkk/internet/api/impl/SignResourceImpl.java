@@ -32,7 +32,11 @@ public class SignResourceImpl implements SignResource {
 
     @Override
     public Result<String> signIn(User user) {
-        if (checkUser(user))
+        System.out.println("sign in");
+
+        System.out.println(user.getUname()+" "+user.getPword());
+        if (StringUtils.isBlank(user.getUname()) ||
+                StringUtils.isBlank(user.getPword()))
             return new Result<>("", Response.Status.BAD_REQUEST.getStatusCode(), "Login information cannot be empty");
 
         return signService.signIn(user.getUname(), user.getPword());

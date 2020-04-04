@@ -39,10 +39,9 @@ public class AuthRequestFilter implements ContainerRequestFilter {
         if (user == null)
             throw new MissingTokenException();
 
-        String localToken = jedisUtil.get(user, 1);
-        if (!localToken.equals(token))
+        String localToken = jedisUtil.get(token, 1);
+        System.out.println("local token: " + localToken);
+        if (!localToken.equals(user))
             throw new MultiUserRepetitionException();
-
-        headers.add("token", user);
     }
 }

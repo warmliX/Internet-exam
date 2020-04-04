@@ -1,7 +1,6 @@
 package com.zzkk.internet.biz.service;
 
 import com.zzkk.internet.pojo.Result;
-import org.springframework.stereotype.Service;
 
 /**
  * @author warmli

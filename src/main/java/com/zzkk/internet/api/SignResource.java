@@ -12,7 +12,7 @@ import javax.ws.rs.core.MediaType;
 
 @Api(tags = "user_sign", value = "用户账号模板")
 @Path("/user/sign")
-@Consumes(MediaType.APPLICATION_JSON)
+@Consumes({MediaType.APPLICATION_JSON})
 @Produces(MediaType.APPLICATION_JSON)
 public interface SignResource {
     @ApiOperation("注册")

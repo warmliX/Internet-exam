@@ -41,7 +41,22 @@ public class UserDao {
 
     public UserRecord selectByUname(String uname){
         return dslContext.selectFrom(user)
-                .where(user.UNAME.eq(uname))
-                .fetchOne();
+            .where(user.UNAME.eq(uname))
+            .fetchOne();
+    }
+
+    public String selectUidByUname(String uname) {
+        return dslContext.select(user.UID)
+            .from(user)
+            .where(user.UNAME.eq(uname))
+            .fetchOne()
+            .value1();
+    }
+
+    public long selectUserNum() {
+        return dslContext.selectCount()
+            .from(user)
+            .fetchOne()
+            .value1();
     }
 }

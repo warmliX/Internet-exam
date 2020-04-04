@@ -13,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 @Consumes({MediaType.APPLICATION_JSON})
 @Produces(MediaType.APPLICATION_JSON)
 public interface HandFaultResource {
-    @ApiOperation(value="获取故障", notes="获取小程序首页的基本设置")
+    @ApiOperation(value="获取故障")
     @GET
     @Compress
     @Path("/layout")

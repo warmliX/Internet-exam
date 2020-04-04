@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Lowin</title>
+	<link rel="stylesheet" href="static/login/auth.css">
+	<link rel="icon" href="static/favicon.ico" type="image/x-icon">
+</head>
+
+<body onload="">
+	<div class="lowin">
+		<div class="lowin-wrapper">
+			<div class="lowin-box lowin-login">
+				<div class="lowin-box-inner">
+					<form>
+						<p>虚拟仿真网络故障训练平台</p>
+						<div class="lowin-group">
+							<label>账号：<a href="#" class="login-back-link">Sign in?</a></label>
+							<input type="text" id="user" autocomplete="off" name="email" class="lowin-input">
+						</div>
+						<div class="lowin-group password-group">
+							<label>密码：<a href="#" class="login-back-link">Sign in?</a></label>
+							<input type="password" id="pwd" name="password" autocomplete="current-password" class="lowin-input">
+						</div>
+						<div>
+							<label id="errorMsg"></label>
+						</div>
+						<input type="button" class="lowin-btn login-btn" id="login" value="登 录" />
+						<br/><br/>
+						<input type="button" class="lowin-btn login-btn" id="register" value="注 册" />
+						<div class="text-foot">
+
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	
+		<footer class="lowin-footer">
+			Design By 李玮 2020毕设</a>
+		</footer>
+	</div>
+
+	<script src="static/login/auth.js"></script>
+	<script src="static/index/jquery/jquery.min.js"></script>
+	<script src="static/index/jquery/jquery.js"></script>
+	<script src="static/index/jquery.cookie/jquery.cookie.js"></script>
+	<script src="https://cdn.bootcss.com/crypto-js/3.1.9-1/crypto-js.min.js"></script>
+	<script>
+
+	</script>
+
+	<script type="text/javascript">
+		$.cookie("user", null);
+		$.cookie("userName", null);
+
+		$("#login").click(function () {
+			var user = document.getElementById("user").value;
+			var pwd = document.getElementById("pwd").value;
+			pwd = CryptoJS.enc.Hex.stringify(CryptoJS.HmacSHA256('internet_exam', pwd));
+			alert(pwd);
+			alert(JSON.stringify({"uname": user, "pword": pwd}));
+			$.ajax({
+				type: "POST",
+				url: "/internet_exam/user/sign/in",
+				contentType: "application/json;charset=utf-8",
+				data: JSON.stringify({"uname": user, "pword": pwd}),
+				success: function (result) {
+					if (result.status === 400) {
+						alert("账号或密码错误");
+					} else {
+						$.cookie("user", result.value);
+						$.cookie("userName", user);
+						window.location.href = "http://localhost:8080/index";
+						if (user === 'admin') {
+							//window.location.href = "http://localhost:8080/allExam?token=" + $.cookie("user")
+						}
+					}
+				},
+				error: function () {
+					alert("系统错误，请联系管理员处理");
+				}
+			});
+		});
+
+		$("#register").click(function () {
+			window.location.href = "http://localhost:8080/loginUp";
+		});
+	</script>
+
+</body>
+</html>
